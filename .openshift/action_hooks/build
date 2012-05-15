@@ -1,5 +1,5 @@
 #!/bin/bash
-# This is a simple build script and will be executed on your CI system if 
+# This is a simple build script and will be executed on your CI system if
 # available.  Otherwise it will execute while your application is stopped
 # before the deploy step.  This script gets executed directly, so it
 # could be python, php, ruby, etc.
@@ -12,8 +12,10 @@ set -e
 	tar xzf - -C $OPENSHIFT_RUNTIME_DIR
 
 export GOROOT=$OPENSHIFT_RUNTIME_DIR/go
-export PATH=$PATH:$GOROOT/bin
+export GOPATH=$OPENSHIFT_RUNTIME_DIR/build
+export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 
-cd $OPENSHIFT_REPO_DIR
-cd hello
-go build
+rm -rf $GOPATH 2>/dev/null
+mkdir -p $GOPATH/src
+cp -r $OPENSHIFT_REPO_DIR/$OPENSHIFT_GEAR_NAME $GOPATH/src
+go get $OPENSHIFT_GEAR_NAME $OPENSHIFT_GEAR_NAME/...

@@ -1,2 +1,7 @@
 #!/bin/bash
 # The logic to stop your application should be put in this script.
+
+set -e
+
+cat $OPENSHIFT_LOG_DIR/$OPENSHIFT_APP_NAME.log || :
+xargs -r kill <$OPENSHIFT_RUN_DIR/$OPENSHIFT_APP_NAME.pid || :
